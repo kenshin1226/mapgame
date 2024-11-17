@@ -20,6 +20,8 @@
         image4.src="img/stone.png";
         let movingLeft=false
         let movingRight=false
+        let bx=50;
+        let by=50;
         const map=[[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
         [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
         [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -65,8 +67,9 @@
             // ctx.strokeStyle = "black"; // 線の色
             // ctx.lineWidth = 10; // 線の太さ
             // ctx.stroke(); // 線を描画
-            for(let i=1;i<=12;i++){
-              for(let u=1;u<=16;u++){
+            
+            for(let i=0;i<12;i++){
+              for(let u=0;u<16;u++){
                 if(map[i][u]==1){
                 ctx.drawImage(
                     image2,
@@ -90,7 +93,17 @@
                 };
               }  
             }
-
+            ctx.drawImage(
+                    image,
+                    0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
+                    bx, by, 80, 80 // 描画する位置とサイズ (dx, dy, dw, dh)
+                );
+            if (movingLeft==true){
+                bx=bx-50
+            }
+            if(movingRight==true){
+                bx=bx+50
+            }
        
        
 
