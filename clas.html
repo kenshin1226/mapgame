@@ -1,0 +1,23 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Canvas Animation</title>
+</head>
+<body>
+    <script>
+class Character {
+    constructor(name, health) {
+        this.name = name;   // 新しいオブジェクトにプロパティを追加
+        this.health = health;
+    }
+
+    showInfo() {
+        console.log(`${this.name} has ${this.health} health.`);
+    }
+}
+
+const hero = new Character("Hero", 100);  // `new`を使ってインスタンスを作成
+hero.showInfo();  // Hero has 100 health.
+</script>
+</body>
+</html>
