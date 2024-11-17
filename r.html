@@ -20,6 +20,8 @@
         image4.src="img/stone.png";
         let movingLeft=false
         let movingRight=false
+        let movingup=false
+        let movingdown=false
         let bx=50;
         let by=50;
         const map=[[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -42,6 +44,12 @@
             if (e.key === 'ArrowRight') {
                 movingRight = true;
             }
+            if (e.key === 'ArrowUp'){
+                movingup = true;
+            }
+            if (e.key === 'ArrowDown'){
+                movingdown = true;
+            }
         }
         // キーボードイベントリスナー
         window.addEventListener('keydown',f1 );
@@ -52,6 +60,12 @@
             }
             if (e.key === 'ArrowRight') {
                 movingRight = false;
+            }
+            if (e.key === 'ArrowUp'){
+                movingup = false;
+            }
+            if (e.key === 'ArrowDown'){
+                movingdown = false;
             }
         });
 
@@ -104,6 +118,25 @@
             if(movingRight==true){
                 bx=bx+50
             }
+            if (movingup==true){
+                by=by-50
+            }
+            if(movingdown==true){
+                by=by+50
+            }
+
+            if(bx>750){
+                bx=750
+            }
+            else if(bx<0){
+                bx=0
+            };
+            if(by>550){
+                by=550
+            }
+            else if(by<0){
+                by=0
+            };
        
        
 
