@@ -18,6 +18,8 @@
         image3.src="img/sea.png";
         const image4 =new Image();
         image4.src="img/stone.png";
+        const image_fune1=new Image;
+        image_fune1.src="img/fune1.png";
         let movingLeft=false
         let movingRight=false
         let movingup=false
@@ -48,6 +50,7 @@
             }
             if (e.key === 'ArrowDown'){
                 movingdown = true;
+
             }
         }
         // キーボードイベントリスナー
@@ -72,8 +75,8 @@
             constructor(x, y, size, image) {
                 this.x = x;
                 this.y = y;
-                this.x2=x/50
-                this.y2=y/50 
+                this.x2=Math.floor(x/50)
+                this.y2=Math.floor(y/50) 
                 this.size=size
                 this.image=image
             }
@@ -87,8 +90,8 @@
                     0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
                     this.x, this.y, 80, 80 // 描画する位置とサイズ (dx, dy, dw, dh)
                 );
-            if (movingLeft==true){
-                this.x=this.x-50
+            if (movingLeft){
+                this.x-=50
             }
             if(movingRight==true){
                 this.x=this.x+50
@@ -119,18 +122,51 @@
 
             console.log("this.x2="+this.x2)
             console.log("this.y2="+this.y2)
-            if(map[this.x2][this.y2]===2){
+            if(map[this.y2][this.x2]===2){
                 this.x=oldx
                 this.y=oldy
             }
-            else if(map[this.x2][this.y2]===3){
+            else if(map[this.y2][this.x2]===3){
                 this.x=oldx
                 this.y=oldy
             };
             }
 
         }
+        class Fune{
+            constructor(x, y, size, image) {
+                this.fx = x;
+                this.fy = y;
+                this.fx2=Math.floor(x/50)
+                this.fy2=Math.floor(y/50) 
+                this.size=size
+                this.image=image_fune1
+            }
+            draw(){
+                let oldfx=this.fx
+                let oldfy=this.fy                
+
+                ctx.drawImage(
+                    this.image,
+                    0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
+                    this.fx, this.fy, 50, 50 // 描画する位置とサイズ (dx, dy, dw, dh)
+                );
+
+                
+
+                this.fx2=this.fx/50
+                this.fy2=this.fy/50 
+
+                if(map[this.fy2][this.x2]===2){
+                    this.x=oldx
+                    this.y=oldy
+                };
+                
+            }
+
+        }
         const P1=new Player(100,100,50,image)
+        const F1=new Fune(400,500,50,image_fune1)
 
         function draw_flame(){
             ctx.clearRect(0, 0, canvas.width, canvas.height); // 画面クリア
