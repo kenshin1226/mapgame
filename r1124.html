@@ -71,13 +71,21 @@
         class Player {
             constructor(x, y, size, image) {
                 this.x = x;
-                this.y =
+                this.y = y;
+                this.x2=x/50
+                this.y2=y/50 
+                this.size=size
+                this.image=image
             }
-            draw(x,y,size,image){
+            draw(){
+                let oldx=this.x
+                let oldy=this.y
+                
+
                 ctx.drawImage(
-                    image,
+                    this.image,
                     0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
-                    bx, by, 80, 80 // 描画する位置とサイズ (dx, dy, dw, dh)
+                    this.x, this.y, 80, 80 // 描画する位置とサイズ (dx, dy, dw, dh)
                 );
             if (movingLeft==true){
                 this.x=this.x-50
@@ -104,11 +112,27 @@
             else if(this.y<0){
                 this.y=0
             };
+
+
+            this.x2=this.x/50
+            this.y2=this.y/50 
+
+            console.log("this.x2="+this.x2)
+            console.log("this.y2="+this.y2)
+            if(map[this.x2][this.y2]===2){
+                this.x=oldx
+                this.y=oldy
+            }
+            else if(map[this.x2][this.y2]===3){
+                this.x=oldx
+                this.y=oldy
+            };
             }
 
         }
-        const P1=new Player(100,100,size,image)
-        function draw(){
+        const P1=new Player(100,100,50,image)
+
+        function draw_flame(){
             ctx.clearRect(0, 0, canvas.width, canvas.height); // 画面クリア
             // 画像がロードされたら描画
             // image.onload = function() {
@@ -145,15 +169,16 @@
                 };
               }  
             }
+            P1.draw();
             
        
        
 
-            requestAnimationFrame(draw)
+            requestAnimationFrame(draw_flame)
         };
 
         image.onload = function() {
-        draw();
+        draw_flame();
         };
         
     </script>
