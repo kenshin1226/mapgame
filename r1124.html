@@ -18,8 +18,10 @@
         image3.src="img/sea.png";
         const image4 =new Image();
         image4.src="img/stone.png";
-        const image_fune1=new Image;
-        image_fune1.src="img/fune1.png";
+        const image_hune1=new Image;
+        image_hune1.src="img/hune1.png";
+        const image_bug1=new Image;
+        image_bug1.src="img/bug1.png";
         let movingLeft=false
         let movingRight=false
         let movingup=false
@@ -120,8 +122,7 @@
             this.x2=this.x/50
             this.y2=this.y/50 
 
-            console.log("this.x2="+this.x2)
-            console.log("this.y2="+this.y2)
+         
             if(map[this.y2][this.x2]===2){
                 this.x=oldx
                 this.y=oldy
@@ -133,40 +134,135 @@
             }
 
         }
-        class Fune{
+
+
+
+
+
+        class Bug {
             constructor(x, y, size, image) {
+                this.bx = x;
+                this.by = y;
+                this.bx2=Math.floor(x/50)
+                this.by2=Math.floor(y/50) 
+                this.size=size
+                this.image=image
+                this.bf=true
+                this.bf2=0
+                
+            }
+            draw(){
+                let oldbx=this.bx
+                let oldby=this.by
+                let number = Math.floor(Math.random() * 4); // 0から100の間の整数       
+                console.log(number)
+
+                if (this.bf2==10){
+                    this.bf=true
+                    this.bf2=0
+                };
+                console.log(number)
+                if (this.bf==true){
+                    if (number==0){
+                    this.bx-=50
+                    }
+                    if(number==1){
+                        this.bx=this.bx+50
+                    }
+                    if (number==2){
+                        this.by=this.by-50
+                    }
+                    if(number==3){
+                        this.by=this.by+50
+                    }
+                    this.bf=false
+                    
+                };
+                this.bf2+=1
+                if(map[this.by2][this.bx2]!==1){
+                    this.bx=oldbx
+                    this.by=oldby
+                };
+
+                ctx.drawImage(
+                    this.image,
+                    0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
+                    this.bx, this.by, 80, 80 // 描画する位置とサイズ (dx, dy, dw, dh)
+                    
+                );
+                
+            };
+        };
+
+
+        class Fune{
+            constructor(x, y, size, image_hune1) {
                 this.fx = x;
                 this.fy = y;
                 this.fx2=Math.floor(x/50)
                 this.fy2=Math.floor(y/50) 
                 this.size=size
-                this.image=image_fune1
+                this.image=image_hune1
+                this.ff=true
+                this.ff2=10
             }
             draw(){
+                if (this.ff2==10){
+                    this.ff=true
+                    this.ff2=0
+                };
+                console.log("ff2"+this.ff2)
                 let oldfx=this.fx
-                let oldfy=this.fy                
+                let oldfy=this.fy         
+                let number = Math.floor(Math.random() * 4); // 0から100の間の整数       
+                console.log(number)
+                if (this.ff==true){
+                    if (number==0){
+                    this.fx-=50
+                    }
+                    if(number==1){
+                        this.fx=this.fx+50
+                    }
+                    if (number==2){
+                        this.fy=this.fy-50
+                    }
+                    if(number==3){
+                        this.fy=this.fy+50
+                    }
+                    this.ff=false
+                    
+                };
+                this.ff2+=1
+                
+
+                console.log("this.fx="+this.fx)
+                console.log("this.fy="+this.fy)
+                if(this.fx>750){
+                this.fx=750
+                }     
+                if(this.fy>550){
+                    this.fy=550
+                };
+
+                this.fx2=this.fx/50
+                this.fy2=this.fy/50 
+      
+                if(map[this.fy2][this.fx2]!==2){
+                    this.fx=oldfx
+                    this.fy=oldfy
+                };
 
                 ctx.drawImage(
                     this.image,
                     0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
-                    this.fx, this.fy, 50, 50 // 描画する位置とサイズ (dx, dy, dw, dh)
+                    this.fx, this.fy, 100, 100// 描画する位置とサイズ (dx, dy, dw, dh)
                 );
-
-                
-
-                this.fx2=this.fx/50
-                this.fy2=this.fy/50 
-
-                if(map[this.fy2][this.x2]===2){
-                    this.x=oldx
-                    this.y=oldy
-                };
-                
             }
 
         }
         const P1=new Player(100,100,50,image)
-        const F1=new Fune(400,500,50,image_fune1)
+        const F1=new Fune(600,450,50,image_hune1)
+        const B1=new Bug(200,200,50,image_bug1)
 
         function draw_flame(){
             ctx.clearRect(0, 0, canvas.width, canvas.height); // 画面クリア
@@ -206,8 +302,8 @@
               }  
             }
             P1.draw();
-            
-       
+            F1.draw();
+            B1.draw();
        
 
             requestAnimationFrame(draw_flame)
