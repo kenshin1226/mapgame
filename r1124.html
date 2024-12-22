@@ -18,6 +18,8 @@
         image3.src="img/sea.png";
         const image4 =new Image();
         image4.src="img/stone.png";
+        const image5 =new Image();
+        image5.src="img/mount.png";
         const image_hune1=new Image;
         image_hune1.src="img/hune1.png";
         const image_bug1=new Image;
@@ -28,16 +30,16 @@
         let movingdown=false
  
         const map=[[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1,4,1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,4,4,1,1,1,1,1,1,1],
+        [1,1,1,1,1,4,1,1,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,4,4,1,1,1,1,1,1,1,1,1],
         [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-        [1,1,1,1,3,3,1,1,1,1,1,1,1,1,1,1],
-        [1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1],
-        [1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1],
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-        [1,1,1,1,1,1,1,1,2,2,2,1,1,1,1,1],
-        [1,1,1,1,1,1,1,1,1,2,2,2,2,2,1,1],
-        [1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,1],
-        [1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2],
+        [1,1,1,1,1,1,4,1,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,4,4,1,2,2,2,1,1,1,1,1],
+        [1,1,1,1,1,4,1,1,1,2,2,2,2,2,1,1],
+        [1,1,1,4,1,1,1,1,1,1,1,2,2,2,2,1],
+        [1,1,4,4,1,1,1,1,1,1,1,1,2,2,2,2],
         [1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2],
         ]
         const f1=(e) => {
@@ -127,7 +129,11 @@
                 this.x=oldx
                 this.y=oldy
             }
-            else if(map[this.y2][this.x2]===3){
+            if(map[this.y2][this.x2]===3){
+                this.x=oldx
+                this.y=oldy
+            }
+            else if(map[this.y2][this.x2]===4){
                 this.x=oldx
                 this.y=oldy
             };
@@ -138,13 +144,12 @@
 
 
 
-
         class Bug {
             constructor(x, y, size, image) {
                 this.bx = x;
                 this.by = y;
-                this.bx2=Math.floor(x/50)
-                this.by2=Math.floor(y/50) 
+                this.bx2=Math.floor(this.bx/50)
+                this.by2=Math.floor(this.by/50) 
                 this.size=size
                 this.image=image
                 this.bf=true
@@ -154,32 +159,71 @@
             draw(){
                 let oldbx=this.bx
                 let oldby=this.by
+                
+                this.bx2=Math.floor(this.bx/50)
+                this.by2=Math.floor(this.by/50) 
                 let number = Math.floor(Math.random() * 4); // 0から100の間の整数       
-                console.log(number)
 
                 if (this.bf2==10){
                     this.bf=true
                     this.bf2=0
-                };
+                
                 console.log(number)
                 if (this.bf==true){
                     if (number==0){
+                        if(this.bx>0){
+                        if(map[this.by2][this.bx2-1]==1){
                     this.bx-=50
-                    }
+                        }}}
                     if(number==1){
-                        this.bx=this.bx+50
+                        if(this.bx<750)
+                        if(map[this.by2][this.bx2+1]==1){
+                            this.bx=this.bx+50
+                        }
                     }
-                    if (number==2){
-                        this.by=this.by-50
-                    }
-                    if(number==3){
-                        this.by=this.by+50
-                    }
-                    this.bf=false
-                    
                 };
+                    if (number==2){
+                        if(this.by>0){
+                        if(map[this.by2-1][this.bx2]==1){
+                        this.by=this.by-50
+                        }
+                    }
+                };
+                    if(number==3){
+                        if(this.by<550){
+                        if(map[this.by2+1][this.bx2]==1){
+                        this.by=this.by+50
+                        }
+                    }
+                };
+                    this.bf=false
+            };
+                
+
                 this.bf2+=1
-                if(map[this.by2][this.bx2]!==1){
+                console.log("bx2="+this.bx2+"    by2="+this.by2)
+           
+                // console.log("oldbx="+oldbx+"    oldby="+oldby)
+                
+
+                if(this.bx>750){
+                this.bx=750
+                }
+                else if(this.bx<0){
+                    this.bx=0
+                };
+                if(this.by>550){
+                    this.by=550
+                }
+                else if(this.by<0){
+                    this.by=0
+                };
+
+                if(map[this.by2][this.bx2]==2 ){
+                    this.bx=oldbx
+                    this.by=oldby
+                };
+                if(map[this.by2][this.bx2]==3 ){
                     this.bx=oldbx
                     this.by=oldby
                 };
@@ -193,7 +237,7 @@
                 
             };
         };
-
+    
 
         class Fune{
             constructor(x, y, size, image_hune1) {
@@ -235,8 +279,8 @@
                 this.ff2+=1
                 
 
-                console.log("this.fx="+this.fx)
-                console.log("this.fy="+this.fy)
+                // console.log("this.fx="+this.fx)
+                // console.log("this.fy="+this.fy)
                 if(this.fx>750){
                 this.fx=750
                 }     
@@ -260,10 +304,94 @@
             }
 
         }
+
+
+        class Stone{
+            constructor(x, y, size, image) {
+            this.sx=x
+            this.sy=y
+            this.sx2=Math.floor(x/50)
+            this.sy2=Math.floor(y/50) 
+            this.size=size
+            this.image=image4
+            }
+
+            draw(P1){
+                let oldsx=this.sx
+                let oldsy=this.sy 
+                if(this.sy==P1.y){
+                    if(this.sx==P1.x){
+                        if(movingRight==true){
+                            this.sx+=50
+                        }
+                    }
+
+                    if(this.sx==P1.x){
+                        if (movingLeft){
+                            this.sx-=50
+                        }
+                    }
+                }
+                if(this.sx==P1.x){
+                    if(this.sy==P1.y){
+                        if (movingup==true){
+                            this.sy-=50
+                            }
+                    }
+
+                    if(this.sy==P1.y){
+                        if(movingdown==true){
+                            this.sy+=50
+                        }
+                    }
+                }
+                ctx.drawImage(
+                    this.image,
+                    0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
+                    this.sx, this.sy, 80, 80 // 描画する位置とサイズ (dx, dy, dw, dh)
+                )
+
+                if(map[this.sy2][this.sx2]===2){
+                this.sx=oldsx
+                this.sy=oldsy
+                }
+
+                else if(map[this.sy2][this.sx2]===4){
+                    this.sx=oldsx
+                    this.sy=oldsy
+                };
+
+            }
+
+
+
+
+
+
+        }
+
+
+
+
+
         const P1=new Player(100,100,50,image)
         const F1=new Fune(600,450,50,image_hune1)
-        const B1=new Bug(200,200,50,image_bug1)
 
+        const bugs = [];
+        for (let i = 0; i < 3; i++) {
+        const x = 200 + i * 100; // x座標を変化させる
+        const y = 300;          // y座標は固定
+        bugs.push(new Bug(x, y, 50, image_bug1));
+}
+        const stones = [];
+        for (let i = 0; i < 3; i++) {
+        const x2 = 100 + i * 100; // x座標を変化させる
+        const y2 = 400;          // y座標は固定
+        stones.push(new Stone(x2, y2, 50,image4));
+}
+
+
+        
         function draw_flame(){
             ctx.clearRect(0, 0, canvas.width, canvas.height); // 画面クリア
             // 画像がロードされたら描画
@@ -299,12 +427,23 @@
                     u*50, i*50,50, 50 // 描画する位置とサイズ (dx, dy, dw, dh)
                 );
                 };
+                if(map[i][u]==4){
+                ctx.drawImage(
+                    image5,
+                    0, 0, 50, 50, // 切り取る部分の (sx, sy, sw, sh)
+                    u*50, i*50,50, 50 // 描画する位置とサイズ (dx, dy, dw, dh)
+                );
+                };
               }  
             }
             P1.draw();
             F1.draw();
-            B1.draw();
-       
+            for (const bug of bugs) {
+                    bug.draw();
+                }
+                for (const stone of stones) {
+                    stone.draw(P1);
+                }
 
             requestAnimationFrame(draw_flame)
         };
