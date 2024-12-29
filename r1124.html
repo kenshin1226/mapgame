@@ -84,7 +84,7 @@
                 this.size=size
                 this.image=image
             }
-            draw(){
+            draw(bugs,stones){
                 let oldx=this.x
                 let oldy=this.y
                 
@@ -129,16 +129,23 @@
                 this.x=oldx
                 this.y=oldy
             }
-            if(map[this.y2][this.x2]===3){
-                this.x=oldx
-                this.y=oldy
-            }
             else if(map[this.y2][this.x2]===4){
                 this.x=oldx
                 this.y=oldy
             };
+            
+            for (let i = 0; i < 3; i++) {
+                if (stones[i].sy>550 || stones[i].sx>750){
+                if(this.y==stones[i].sy && this.x===stones[i].sx){
+                    this.x=oldx
+                    this.y=oldy
+                }
             }
+        }
+            
+            
 
+            }
         }
 
 
@@ -167,8 +174,7 @@
                 if (this.bf2==10){
                     this.bf=true
                     this.bf2=0
-                
-                console.log(number)
+          
                 if (this.bf==true){
                     if (number==0){
                         if(this.bx>0){
@@ -201,9 +207,7 @@
                 
 
                 this.bf2+=1
-                console.log("bx2="+this.bx2+"    by2="+this.by2)
-           
-                // console.log("oldbx="+oldbx+"    oldby="+oldby)
+      
                 
 
                 if(this.bx>750){
@@ -255,11 +259,11 @@
                     this.ff=true
                     this.ff2=0
                 };
-                console.log("ff2"+this.ff2)
+          
                 let oldfx=this.fx
                 let oldfy=this.fy         
                 let number = Math.floor(Math.random() * 4); // 0から100の間の整数       
-                console.log(number)
+         
                 if (this.ff==true){
                     if (number==0){
                     this.fx-=50
@@ -279,8 +283,6 @@
                 this.ff2+=1
                 
 
-                // console.log("this.fx="+this.fx)
-                // console.log("this.fy="+this.fy)
                 if(this.fx>750){
                 this.fx=750
                 }     
@@ -319,31 +321,53 @@
             draw(P1){
                 let oldsx=this.sx
                 let oldsy=this.sy 
+
                 if(this.sy==P1.y){
+
                     if(this.sx==P1.x){
-                        if(movingRight==true){
-                            this.sx+=50
+                        if(this.sx<750){
+                            if(map[this.sy2][this.sx2-1]==1){
+                                if(movingRight==true){
+                                    this.sx+=50
+                                }
+                            }
                         }
                     }
 
                     if(this.sx==P1.x){
-                        if (movingLeft){
-                            this.sx-=50
+                        if(this.sx>0){
+                            if(map[this.sy2][this.sx2+1]==1){
+                                if (movingLeft){
+                                    this.sx-=50
+                                }
+                            }
                         }
                     }
                 }
+                      
                 if(this.sx==P1.x){
-                    if(this.sy==P1.y){
-                        if (movingup==true){
-                            this.sy-=50
-                            }
-                    }
 
                     if(this.sy==P1.y){
-                        if(movingdown==true){
-                            this.sy+=50
+                        if(this.sy>0){
+                            if(map[this.sy2-1][this.sx2]==1){
+                                if (movingup==true){
+                                    this.sy-=50
+                                }
+                            }
                         }
                     }
+                    //下
+                    if(this.sy==P1.y){
+                        if(this.sy<550){
+                            if(map[this.sy2+1][this.sx2]==1){
+                                console.log("sx2="+this.sx2+"sy2="+this.sy2)
+                                if(movingdown==true){
+                                    this.sy+=50
+                                }
+                            }
+                        }
+                    }
+
                 }
                 ctx.drawImage(
                     this.image,
@@ -351,15 +375,7 @@
                     this.sx, this.sy, 80, 80 // 描画する位置とサイズ (dx, dy, dw, dh)
                 )
 
-                if(map[this.sy2][this.sx2]===2){
-                this.sx=oldsx
-                this.sy=oldsy
-                }
 
-                else if(map[this.sy2][this.sx2]===4){
-                    this.sx=oldsx
-                    this.sy=oldsy
-                };
 
             }
 
@@ -436,7 +452,7 @@
                 };
               }  
             }
-            P1.draw();
+            P1.draw(bugs,stones);
             F1.draw();
             for (const bug of bugs) {
                     bug.draw();
