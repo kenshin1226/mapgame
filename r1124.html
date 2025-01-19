@@ -79,23 +79,53 @@
             constructor(x, y, size, image) {
                 this.x = x;
                 this.y = y;
-                this.x2=Math.floor(x/50)
-                this.y2=Math.floor(y/50) 
                 this.size=size
                 this.image=image
+                this.f=10
             }
-            draw(bugs,stones){
+            draw(){
                 let oldx=this.x
                 let oldy=this.y
-                
+                this.f+=1
 
                 ctx.drawImage(
                     this.image,
                     0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
                     this.x, this.y, 80, 80 // 描画する位置とサイズ (dx, dy, dw, dh)
                 );
+            }
+            update(){
+
+                if(this.f%10==0){
             if (movingLeft){
-                this.x-=50
+                let x1=this.x-50
+                let y1=this.y
+                let x2=this.x-100
+                let y2=this.y
+                let xm1=Math.floor(x1/50)
+                let ym1=Math.floor(y1/50)
+                let xm2=Math.floor(x2/50)
+                let ym2=Math.floor(y2/50)
+                if (x1<0){return}//枠から外れているかどうか
+                if (map[ym1][xm1]!=1){return}//平原以外ではないか
+                let stone_id=Check_stone(x1,y1)
+                console.log("id="+stone_id)
+                if (stone_id>=0){
+                    if (x2<0){return}//枠から外れているかどうか2
+                    if (map[ym2][xm2]!=1){return}//平原以外ではないか2
+                    let stone_id2=Check_stone(x2,y2)
+                    if (stone_id2>=0){return}//2マス先に石があるかどうか
+                    let bugs_id2=Check_bug(x2,y2)//2マス先に虫がいるかどうか
+                    if (bugs_id2>=0){return}
+                    this.x-=50
+                    stones[stone_id].sx-=50
+                }       
+                if(stone_id==-1){
+                    let bugs_id=Check_bug(x1,y2)
+                    if(bugs_id>=0){return}
+                    this.x-=50
+                }
+                
             }
             if(movingRight==true){
                 this.x=this.x+50
@@ -106,7 +136,8 @@
             if(movingdown==true){
                 this.y=this.y+50
             }
-
+            this.f=0
+        }
             if(this.x>750){
                 this.x=750
             }
@@ -121,18 +152,7 @@
             };
 
 
-            this.x2=this.x/50
-            this.y2=this.y/50 
-
-         
-            if(map[this.y2][this.x2]===2){
-                this.x=oldx
-                this.y=oldy
-            }
-            else if(map[this.y2][this.x2]===4){
-                this.x=oldx
-                this.y=oldy
-            };
+            
             
             for (let i = 0; i < 3; i++) {
                 if (stones[i].sy>550 || stones[i].sx>750){
@@ -143,12 +163,29 @@
             }
         }
             
+    }   
+
             
-
-            }
         }
-
-
+    //ここで動かす石がどれか調べる
+    const Check_stone=(x,y)=>{
+        for (let i = 0; i < 3; i++) {
+            if (x==stones[i].sx && y==stones[i].sy){
+                return i
+            }
+            
+        }
+        return -1
+    }
+    const Check_bug=(x,y)=>{
+        for (let i = 0; i < 3; i++) {
+            if (x==bugs[i].bx && y==bugs[i].by){
+                return i
+            }
+            
+        }
+        return -1
+    }
 
 
         class Bug {
@@ -322,53 +359,7 @@
                 let oldsx=this.sx
                 let oldsy=this.sy 
 
-                if(this.sy==P1.y){
-
-                    if(this.sx==P1.x){
-                        if(this.sx<750){
-                            if(map[this.sy2][this.sx2-1]==1){
-                                if(movingRight==true){
-                                    this.sx+=50
-                                }
-                            }
-                        }
-                    }
-
-                    if(this.sx==P1.x){
-                        if(this.sx>0){
-                            if(map[this.sy2][this.sx2+1]==1){
-                                if (movingLeft){
-                                    this.sx-=50
-                                }
-                            }
-                        }
-                    }
-                }
-                      
-                if(this.sx==P1.x){
-
-                    if(this.sy==P1.y){
-                        if(this.sy>0){
-                            if(map[this.sy2-1][this.sx2]==1){
-                                if (movingup==true){
-                                    this.sy-=50
-                                }
-                            }
-                        }
-                    }
-                    //下
-                    if(this.sy==P1.y){
-                        if(this.sy<550){
-                            if(map[this.sy2+1][this.sx2]==1){
-                                console.log("sx2="+this.sx2+"sy2="+this.sy2)
-                                if(movingdown==true){
-                                    this.sy+=50
-                                }
-                            }
-                        }
-                    }
-
-                }
+                
                 ctx.drawImage(
                     this.image,
                     0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
@@ -452,7 +443,8 @@
                 };
               }  
             }
-            P1.draw(bugs,stones);
+            P1.draw();
+            P1.update()
             F1.draw();
             for (const bug of bugs) {
                     bug.draw();
