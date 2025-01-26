@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        class Player {
+            constructor(x, y, size, image) {
+                this.x = x;
+                this.y = y;
+                this.size=size
+                this.image=image
+                this.f=10
+            }
+            draw(){
+                let oldx=this.x
+                let oldy=this.y
+                this.f+=1
+
+                ctx.drawImage(
+                    this.image,
+                    0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
+                    this.x, this.y, 80, 80 // 描画する位置とサイズ (dx, dy, dw, dh)
+                );
+            }
+            update(){
+                
+                if(this.f%10==0){
+                let key=-1
+                if(movingup==true){key=0}
+                if(movingdown==true){key=1}
+                if(movingLeft==true){key=2}
+                if(movingRight==true){key=3}
+                let x1=[0,0,-50,50]//上下左右
+                let y1=[-50,50,0,0]
+                let x2=[0,0,-100,100]
+                let y2=[-100,100,0,0]
+                let xm1=Math.floor(x1[key]/50)
+                let ym1=Math.floor(y1[key]/50)
+                let xm2=Math.floor(x2[key]/50)
+                let ym2=Math.floor(y2[key]/50)
+                if (x1[key]<0 || y1[key]>600){return}//枠から外れているかどうか
+                if (map[ym1][xm1]!=1){return}//平原以外ではないか
+                let stone_id=Check_stone(x1[key],y1[key])
+                if (stone_id>=0){
+                    if (x2[key]<0){return}//枠から外れているかどうか2
+                    if (map[ym2][xm2]!=1){return}//平原以外ではないか2
+                    let stone_id2=Check_stone(x2,y2)
+                    if (stone_id2>=0){return}//2マス先に石があるかどうか
+                    let bugs_id2=Check_bug(x2,y2)//2マス先に虫がいるかどうか
+                    if (bugs_id2>=0){return}
+                    this.x-=50
+                    stones[stone_id].sx-=50
+                }       
+                if(stone_id==-1){
+                    let bugs_id=Check_bug(x1,y2)
+                    if(bugs_id>=0){return}
+                    this.x-=50
+                }
+                
+            
+
+            this.f=0
+        }
+            if(this.x>750){
+                this.x=750
+            }
+            else if(this.x<0){
+                this.x=0
+            };
+            if(this.y>550){
+                this.y=550
+            }
+            else if(this.y<0){
+                this.y=0
+            };
+
+
+            
+            
+            for (let i = 0; i < 3; i++) {
+                if (stones[i].sy>550 || stones[i].sx>750){
+                if(this.y==stones[i].sy && this.x===stones[i].sx){
+                    this.x=oldx
+                    this.y=oldy
+                }
+            }
+        }
+            
+    }   
+}
+
+    </script>
+</body>
+</html>

@@ -95,47 +95,52 @@
                 );
             }
             update(){
-
+                if(movingup==false&& movingdown==false && movingLeft==false &&movingRight==false){return}
                 if(this.f%10==0){
-            if (movingLeft){
-                let x1=this.x-50
-                let y1=this.y
-                let x2=this.x-100
-                let y2=this.y
+                let key=0
+                if(movingup==true){key=0}
+                if(movingdown==true){key=1}
+                if(movingLeft==true){key=2}
+                if(movingRight==true){key=3}
+                let xd=[0,0,-50,50]//上下左右
+                let yd=[-50,50,0,0]
+                let x1=this.x+xd[key]
+                let y1=this.y+yd[key]
+                let xd2=[0,0,-100,100]
+                let yd2=[-100,100,0,0]
+                let x2=this.x+xd2[key]
+                let y2=this.y+yd2[key]
                 let xm1=Math.floor(x1/50)
                 let ym1=Math.floor(y1/50)
                 let xm2=Math.floor(x2/50)
                 let ym2=Math.floor(y2/50)
-                if (x1<0){return}//枠から外れているかどうか
+                console.log("key"+key)
+                if (x1<0 || y1>600 ||x1>800 || y1<0){return}//枠から外れているかどうか
+                console.log("xm2="+xm2)
+                console.log("ym2="+ym2)
                 if (map[ym1][xm1]!=1){return}//平原以外ではないか
                 let stone_id=Check_stone(x1,y1)
-                console.log("id="+stone_id)
                 if (stone_id>=0){
-                    if (x2<0){return}//枠から外れているかどうか2
+                    if (x2<0 || y2>600 ||x2>800 || y2<0){return}//枠から外れているかどうか2
                     if (map[ym2][xm2]!=1){return}//平原以外ではないか2
                     let stone_id2=Check_stone(x2,y2)
                     if (stone_id2>=0){return}//2マス先に石があるかどうか
                     let bugs_id2=Check_bug(x2,y2)//2マス先に虫がいるかどうか
                     if (bugs_id2>=0){return}
-                    this.x-=50
-                    stones[stone_id].sx-=50
+                    this.x+=xd[key]
+                    this.y+=yd[key]
+                    stones[stone_id].sx+=xd[key]
+                    stones[stone_id].sy+=yd[key]
                 }       
                 if(stone_id==-1){
                     let bugs_id=Check_bug(x1,y2)
                     if(bugs_id>=0){return}
-                    this.x-=50
+                    this.x+=xd[key]
+                    this.y+=yd[key]
                 }
                 
-            }
-            if(movingRight==true){
-                this.x=this.x+50
-            }
-            if (movingup==true){
-                this.y=this.y-50
-            }
-            if(movingdown==true){
-                this.y=this.y+50
-            }
+            
+
             this.f=0
         }
             if(this.x>750){
@@ -164,9 +169,7 @@
         }
             
     }   
-
-            
-        }
+}
     //ここで動かす石がどれか調べる
     const Check_stone=(x,y)=>{
         for (let i = 0; i < 3; i++) {
