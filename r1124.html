@@ -34,10 +34,10 @@
         [1,1,1,1,1,1,1,4,4,1,1,1,1,1,1,1],
         [1,1,1,1,1,4,1,1,1,1,1,1,1,1,1,1],
         [1,1,1,1,1,4,4,1,1,1,1,1,1,1,1,1],
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
         [1,1,1,1,1,1,4,1,1,1,1,1,1,1,1,1],
-        [1,1,1,1,1,4,4,1,2,2,2,1,1,1,1,1],
-        [1,1,1,1,1,4,1,1,1,2,2,2,2,2,1,1],
+        [1,1,1,1,1,4,1,1,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,4,1,1,2,2,2,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1,1,2,2,2,2,2,1,1],
         [1,1,1,4,1,1,1,1,1,1,1,2,2,2,2,1],
         [1,1,4,4,1,1,1,1,1,1,1,1,2,2,2,2],
         [1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2],
@@ -115,13 +115,15 @@
                 let xm2=Math.floor(x2/50)
                 let ym2=Math.floor(y2/50)
                 console.log("key"+key)
-                if (x1<0 || y1>600 ||x1>800 || y1<0){return}//枠から外れているかどうか
+                if (x1<0 || y1>=600 ||x1>=800 || y1<0){return}//枠から外れているかどうか
                 console.log("xm2="+xm2)
                 console.log("ym2="+ym2)
+                console.log("xm1="+xm1)
+                console.log("ym1="+ym1)
                 if (map[ym1][xm1]!=1){return}//平原以外ではないか
                 let stone_id=Check_stone(x1,y1)
                 if (stone_id>=0){
-                    if (x2<0 || y2>600 ||x2>800 || y2<0){return}//枠から外れているかどうか2
+                    if (x2<0 || y2>=600 ||x2>=800 || y2<0){return}//枠から外れているかどうか2
                     if (map[ym2][xm2]!=1){return}//平原以外ではないか2
                     let stone_id2=Check_stone(x2,y2)
                     if (stone_id2>=0){return}//2マス先に石があるかどうか
@@ -172,7 +174,7 @@
 }
     //ここで動かす石がどれか調べる
     const Check_stone=(x,y)=>{
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 5; i++) {
             if (x==stones[i].sx && y==stones[i].sy){
                 return i
             }
@@ -201,52 +203,50 @@
                 this.image=image
                 this.bf=true
                 this.bf2=0
-                
+                this.flag=true
+                this.c=0
+                this.bbb=0
             }
             draw(){
+                
                 let oldbx=this.bx
                 let oldby=this.by
                 
                 this.bx2=Math.floor(this.bx/50)
                 this.by2=Math.floor(this.by/50) 
-                let number = Math.floor(Math.random() * 4); // 0から100の間の整数       
-
+                let number = Math.floor(Math.random() * 4); // 0から100の間の整数
+                let bxd=[0,0,-50,50]
+                let byd=[-50,50,0,0]       
+                let bx1=this.bx+bxd[number]
+                let by1=this.by+byd[number]
+                let bxm1=Math.floor(bx1/50)
+                let bym1=Math.floor(by1/50)
+                
+                if (this.bbb<=10){
                 if (this.bf2==10){
                     this.bf=true
                     this.bf2=0
-          
-                if (this.bf==true){
-                    if (number==0){
-                        if(this.bx>0){
-                        if(map[this.by2][this.bx2-1]==1){
-                    this.bx-=50
-                        }}}
-                    if(number==1){
-                        if(this.bx<750)
-                        if(map[this.by2][this.bx2+1]==1){
-                            this.bx=this.bx+50
-                        }
-                    }
-                };
-                    if (number==2){
-                        if(this.by>0){
-                        if(map[this.by2-1][this.bx2]==1){
-                        this.by=this.by-50
-                        }
-                    }
-                };
-                    if(number==3){
-                        if(this.by<550){
-                        if(map[this.by2+1][this.bx2]==1){
-                        this.by=this.by+50
-                        }
-                    }
-                };
+                    this.bbb+=1
+
+
+                    if (bx1<0 || by1>=600 ||bx1>=800 || by1<0){return}//枠から外れているかどうか
+                    if (map[bym1][bxm1]!=1){return}//平原以外ではないか
+                    let stone_id=Check_stone(bx1,by1)
+                    if (stone_id!=-1){return}
+                    this.bx+=bxd[number]
+                    this.by+=byd[number]
+
+
+                    
                     this.bf=false
-            };
+                    this.bbb=0
+            }
+        }
                 
 
                 this.bf2+=1
+
+
       
                 
 
@@ -272,12 +272,14 @@
                     this.by=oldby
                 };
 
+                if (this.bbb<=10){
                 ctx.drawImage(
                     this.image,
                     0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
                     this.bx, this.by, 80, 80 // 描画する位置とサイズ (dx, dy, dw, dh)
-                    
+                
                 );
+                }
                 
             };
         };
@@ -394,8 +396,8 @@
         bugs.push(new Bug(x, y, 50, image_bug1));
 }
         const stones = [];
-        for (let i = 0; i < 3; i++) {
-        const x2 = 100 + i * 100; // x座標を変化させる
+        for (let i = 0; i < 5   ; i++) {
+        const x2 = 0 + i * 100; // x座標を変化させる
         const y2 = 400;          // y座標は固定
         stones.push(new Stone(x2, y2, 50,image4));
 }
