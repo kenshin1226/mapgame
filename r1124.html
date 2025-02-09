@@ -7,9 +7,27 @@
 </head>
 <body>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <canvas id="gameCanvas2" width="400" height="300"></canvas>
     <script>
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
+
+        const canvas2 = document.getElementById("gameCanvas2");
+        const ctx2 = canvas2.getContext("2d");
+
+        // 枠線のスタイルを設定
+        ctx2.strokeStyle = "red"; // 枠線の色
+        ctx2.lineWidth = 5; // 枠線の太さ
+        // キャンバス全体を囲む枠線を描く
+        ctx2.strokeRect(0, 0, canvas2.width, canvas2.height);
+        // フォント設定
+        ctx2.font = "30px Arial";
+        ctx2.fillStyle = "blue"; // 文字の色
+        
+       
+
+
+
         const image = new Image();
         image.src = "img/man1.png";
         const image2 =new Image();
@@ -35,8 +53,8 @@
         [1,1,1,1,1,4,1,1,1,1,1,1,1,1,1,1],
         [1,1,1,1,1,4,4,1,1,1,1,1,1,1,1,1],
         [1,1,1,1,1,1,4,1,1,1,1,1,1,1,1,1],
-        [1,1,1,1,1,4,1,1,1,1,1,1,1,1,1,1],
-        [1,1,1,1,1,4,1,1,2,2,2,1,1,1,1,1],
+        [1,1,1,1,1,4,1,4,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,4,1,2,2,2,2,1,1,1,1,1],
         [1,1,1,1,1,1,1,1,1,2,2,2,2,2,1,1],
         [1,1,1,4,1,1,1,1,1,1,1,2,2,2,2,1],
         [1,1,4,4,1,1,1,1,1,1,1,1,2,2,2,2],
@@ -82,8 +100,12 @@
                 this.size=size
                 this.image=image
                 this.f=10
+                this.hp=100
             }
             draw(){
+
+                // 文字を描画
+                ctx2.fillText("HP"+P1.hp, 50, 50);
                 let oldx=this.x
                 let oldy=this.y
                 this.f+=1
@@ -201,11 +223,9 @@
                 this.by2=Math.floor(this.by/50) 
                 this.size=size
                 this.image=image
-                this.bf=true
-                this.bf2=0
-                this.flag=true
-                this.c=0
-                this.bbb=0
+                this.bf=true//行動速度の制限
+                this.bf2=0//10フレーム経ったらbfがtrueになって虫が動く
+                this.bbb=0//これが10になったら虫は消える
             }
             draw(){
                 
@@ -222,7 +242,7 @@
                 let bxm1=Math.floor(bx1/50)
                 let bym1=Math.floor(by1/50)
                 
-                if (this.bbb<=10){
+                if (this.bbb<=30){
                 if (this.bf2==10){
                     this.bf=true
                     this.bf2=0
@@ -242,6 +262,11 @@
                     this.bbb=0
             }
         }
+                if(this.bbb>30){
+                    this.bx=1000
+                    
+
+                }
                 
 
                 this.bf2+=1
@@ -272,7 +297,7 @@
                     this.by=oldby
                 };
 
-                if (this.bbb<=10){
+                if (this.bbb<=30){
                 ctx.drawImage(
                     this.image,
                     0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
@@ -282,6 +307,18 @@
                 }
                 
             };
+
+            update(){
+                
+                if(this.bx==P1.x && this.by==P1.y){
+                  P1.hp-=1  
+               
+                }
+    
+
+
+                };
+
         };
     
 
@@ -406,6 +443,7 @@
         
         function draw_flame(){
             ctx.clearRect(0, 0, canvas.width, canvas.height); // 画面クリア
+            ctx2.clearRect(0, 0, canvas2.width, canvas2.height); // 画面クリア
             // 画像がロードされたら描画
             // image.onload = function() {
             // 直線を描く
@@ -453,13 +491,20 @@
             F1.draw();
             for (const bug of bugs) {
                     bug.draw();
+                    bug.update();
                 }
                 for (const stone of stones) {
                     stone.draw(P1);
                 }
-
+            
+            if(P1.hp==0){
+            ctx2.fillText("敗北しました", 50, 100)
+            }
+            if(P1.hp>0){
             requestAnimationFrame(draw_flame)
+            }
         };
+        
 
         image.onload = function() {
         draw_flame();
