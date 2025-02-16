@@ -6,14 +6,37 @@
     <title>Document</title>
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <!-- <canvas id="gameCanvas" width="800" height="600"></canvas> -->
+    <canvas id="gameCanvas"></canvas>
     <canvas id="gameCanvas2" width="400" height="300"></canvas>
+    
     <script>
+
+        
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
         const canvas2 = document.getElementById("gameCanvas2");
         const ctx2 = canvas2.getContext("2d");
+
+        w = window.innerWidth;//実際のWindowsのサイズ
+        h = window.innerHeight;
+        canvas.width = w;//canvasを実サイズに合わせる（デフォルトの800x600から変更）
+        canvas.height = h;
+        katamuki=600/800
+        katamuki2=h/w
+
+        if (katamuki>katamuki2){
+            scale=h/600
+            ctx.scale(scale,scale);
+        }
+        if(katamuki<katamuki2){
+            scale=w/800
+            ctx.scale(scale,scale);
+        };
+        
+        
+        
 
         // 枠線のスタイルを設定
         ctx2.strokeStyle = "red"; // 枠線の色
@@ -110,11 +133,13 @@
                 let oldy=this.y
                 this.f+=1
 
+                ctx.globalAlpha = this.hp/100*1.5; // 透明度50%（0.0 = 完全透明, 1.0 = 不透明）
                 ctx.drawImage(
                     this.image,
                     0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
                     this.x, this.y, 80, 80 // 描画する位置とサイズ (dx, dy, dw, dh)
                 );
+                ctx.globalAlpha = 1; // 透明度50%（0.0 = 完全透明, 1.0 = 不透明）
             }
             update(){
                 if(movingup==false&& movingdown==false && movingLeft==false &&movingRight==false){return}
@@ -225,9 +250,14 @@
                 this.image=image
                 this.bf=true//行動速度の制限
                 this.bf2=0//10フレーム経ったらbfがtrueになって虫が動く
-                this.bbb=0//これが10になったら虫は消える
+                this.bhp=30//これが0になったら虫は消える
             }
             draw(){
+
+                //虫の仕様　
+                // 虫のhpが0になるときに周りが過去ってあれば捕まえたと判定してポイントになる。
+                //壁以外の障害物に当たったらhpが減る
+                //スポンジブロックにあたるとダメージを受けない（できたら）
                 
                 let oldbx=this.bx
                 let oldby=this.by
@@ -242,11 +272,11 @@
                 let bxm1=Math.floor(bx1/50)
                 let bym1=Math.floor(by1/50)
                 
-                if (this.bbb<=30){
+                if (this.bhp>=1){
                 if (this.bf2==10){
                     this.bf=true
                     this.bf2=0
-                    this.bbb+=1
+                    this.bhp-=1
 
 
                     if (bx1<0 || by1>=600 ||bx1>=800 || by1<0){return}//枠から外れているかどうか
@@ -255,14 +285,14 @@
                     if (stone_id!=-1){return}
                     this.bx+=bxd[number]
                     this.by+=byd[number]
-
+                    
 
                     
                     this.bf=false
-                    this.bbb=0
+                    this.bhp+=1
             }
         }
-                if(this.bbb>30){
+                if(this.bhp<=0){
                     this.bx=1000
                     
 
@@ -297,13 +327,16 @@
                     this.by=oldby
                 };
 
-                if (this.bbb<=30){
+                if (this.bhp>0){
+
+                ctx.globalAlpha = this.bhp/30*1.5; // 透明度50%（0.0 = 完全透明, 1.0 = 不透明）
                 ctx.drawImage(
                     this.image,
                     0, 0, 100, 100, // 切り取る部分の (sx, sy, sw, sh)
                     this.bx, this.by, 80, 80 // 描画する位置とサイズ (dx, dy, dw, dh)
                 
                 );
+                ctx.globalAlpha =1; // 透明度50%（0.0 = 完全透明, 1.0 = 不透明）
                 }
                 
             };
