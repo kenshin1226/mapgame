@@ -120,7 +120,13 @@
         window.addEventListener('keydown',f1 );
         window.addEventListener('keyup',f2);
         
-
+        isRepeating=false
+        if(movingLeft==true||movingRight==true||movingup==true||movingdown==true){
+            isRepeating=true
+        }
+        else{
+            isRepeating=false
+        }
         class Player {
             constructor(x, y, size, image) {
                 this.x = x;
@@ -149,7 +155,9 @@
             }
             update(){
                 if(movingup==false&& movingdown==false && movingLeft==false &&movingRight==false){return}
-                if(this.f%10==0){
+                console.log("is="+isRepeating)
+                if(this.f%10==0||isRepeating==true){
+                    
                 let key=0
                 if(movingup==true){key=0}
                 if(movingdown==true){key=1}
