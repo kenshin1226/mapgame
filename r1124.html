@@ -84,7 +84,7 @@
         [1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2],
         ]
         const f1=(e) => {
-            if (e.key === 'ArrowLeft') {
+            if (e.key === 'ArrowLeft' ) {
                 movingLeft = true;
             }
             if (e.key === 'ArrowRight') {
@@ -97,7 +97,9 @@
                 movingdown = true;
 
             }
+            console.log("ewns="+ewns)
         }
+        
 
         const f2=(e) => {
             if (e.key === 'ArrowLeft') {
@@ -165,12 +167,12 @@
                 let ym1=Math.floor(y1/50)
                 let xm2=Math.floor(x2/50)
                 let ym2=Math.floor(y2/50)
-                console.log("key"+key)
+                // console.log("key"+key)
                 if (x1<0 || y1>=600 ||x1>=800 || y1<0){return}//枠から外れているかどうか
-                console.log("xm2="+xm2)
-                console.log("ym2="+ym2)
-                console.log("xm1="+xm1)
-                console.log("ym1="+ym1)
+                // console.log("xm2="+xm2)
+                // console.log("ym2="+ym2)
+                // console.log("xm1="+xm1)
+                // console.log("ym1="+ym1)
                 if (map[ym1][xm1]!=1){return}//平原以外ではないか
                 let stone_id=Check_stone(x1,y1)
                 if (stone_id>=0){
@@ -475,8 +477,8 @@
         const y2 = 400;          // y座標は固定
         stones.push(new Stone(x2, y2, 50,image4));
 }
-let ewns=0
-let ewns2=["右","左","下","上"]
+let ewns=4
+let ewns2=["右","左","下","上","無"]
 canvas2.addEventListener('mousedown', function(event) {
     const x = event.offsetX;
     const y = event.offsetY;
@@ -485,15 +487,44 @@ canvas2.addEventListener('mousedown', function(event) {
     
     if(10<=x && x<=60 && 60<=y && y<=110){
         ewns=1
+        movingLeft=true
     }
     if(110<=x && x<=160 && 60<=y && y<=110){
         ewns=0
+        movingRight=true
     }
     if(60<=x && x<=110 && 10<=y && y<=60){
         ewns=3
+        movingup=true
     }
     if(60<=x && x<=110 && 110<=y && y<=160){
         ewns=2
+        movingdown=true
+    }
+    
+    // alert("hello"+x+" y="+y)
+});
+canvas2.addEventListener('mouseup', function(event) {
+    const x = event.offsetX;
+    const y = event.offsetY;
+    
+    console.log(`X: ${x}, Y: ${y}, ボタン: ${event.button}`);
+    
+    if(10<=x && x<=60 && 60<=y && y<=110){
+        ewns=1
+        movingLeft=false
+    }
+    if(110<=x && x<=160 && 60<=y && y<=110){
+        ewns=0
+        movingRight=false
+    }
+    if(60<=x && x<=110 && 10<=y && y<=60){
+        ewns=3
+        movingup=false
+    }
+    if(60<=x && x<=110 && 110<=y && y<=160){
+        ewns=2
+        movingdown=false
     }
     
     // alert("hello"+x+" y="+y)
@@ -583,6 +614,7 @@ canvas2.addEventListener('mousedown', function(event) {
 
         image.onload = function() {
         draw_flame();
+        console.log("aaa")
         };
         
     </script>
