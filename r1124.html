@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        
+    </style>
 </head>
 <body>
     <!-- <canvas id="gameCanvas" width="800" height="600"></canvas> -->
@@ -98,6 +101,7 @@
 
             }
             console.log("ewns="+ewns)
+            isRepeating=true
         }
         
 
@@ -114,6 +118,7 @@
             if (e.key === 'ArrowDown'){
                 movingdown = false;
             }
+            isRepeating=false
         };
 
         // キーボードイベントリスナー
@@ -121,12 +126,7 @@
         window.addEventListener('keyup',f2);
         
         isRepeating=false
-        if(movingLeft==true||movingRight==true||movingup==true||movingdown==true){
-            isRepeating=true
-        }
-        else{
-            isRepeating=false
-        }
+        
         class Player {
             constructor(x, y, size, image) {
                 this.x = x;
@@ -156,7 +156,7 @@
             update(){
                 if(movingup==false&& movingdown==false && movingLeft==false &&movingRight==false){return}
                 console.log("is="+isRepeating)
-                if(this.f%10==0||isRepeating==true){
+                if(this.f%10==0||isRepeating==false){
                     
                 let key=0
                 if(movingup==true){key=0}
